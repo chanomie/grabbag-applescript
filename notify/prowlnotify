@@ -1,0 +1,87 @@
+#!/bin/bash
+
+APPLICATION='prowlnotify'
+while getopts "hsvwt:i:I:a:p:H:P:n:N:m:" opt; do
+  case $opt in
+    h)
+      echo "help"
+      ;;
+    v)
+      echo "prowlnotify 1.0"
+      echo "Copyright (c) Chaos Corporation, 2015"
+      ;;
+    s)
+      echo "Prowl notify doesn't understand -s (sticky)" >&2
+      ;;
+    w)
+      echo "Prowl notify doesn't understand -w (wait)" >&2
+      ;;
+    i)
+      echo "Prowl notify doesn't understand -i (icon)" >&2
+      ;;
+    I)
+      echo "Prowl notify doesn't understand -I (iconpath)" >&2
+      ;;
+    a)
+      echo "Prowl notify doesn't understand -a (appIcon)" >&2
+      ;;
+    H)
+      echo "Prowl notify doesn't understand -H (host)" >&2
+      ;;
+    t)
+      TITLE=${OPTARG}
+      ;;
+    p)
+      PRIORITY=${OPTARG}
+      ;;
+    P)
+      PASSWORD=${OPTARG}
+      ;;
+    n)
+      APPLICATION=${OPTARG}
+      ;;
+    N)
+      EVENT=${OPTARG}
+      ;;
+    m)
+      MESSAGE=${OPTARG}
+      ;;
+  esac
+done
+
+
+# Usage: growlnotify [-hsvw] [-i ext] [-I filepath] [--image filepath]
+#                   [-a appname] [-p priority] [-H host] [-P password]
+#                   [-n name] [-N notename] [-m message] [-t] [--url url]
+#                   [title]
+#Options:
+#    -h,--help       Display this help
+#    -v,--version    Display version number
+#    -n,--name       Set the name of the application that sends the notification
+#                    [Default: growlnotify]
+#    -N --noteName   Set the note name of the notification that GrowlNotify sends    
+#    -s,--sticky     Make the notification sticky
+#    -a,--appIcon    Specify an application name to take the icon from
+#    -i,--icon       Specify a file type or extension to look up for the
+#                    notification icon
+#    -I,--iconpath   Specify a file whose icon will be the notification icon
+#       --image      Specify an image file to be used for the notification icon
+#    -m,--message    Sets the message to be used instead of using stdin
+#                    Passing - as the argument means read from stdin
+#    -p,--priority   Specify an int or named key (default is 0)
+#    -d,--identifier Specify a notification identifier (used for coalescing)
+#    -H,--host       Specify a hostname or IP address to which to send a remote notification.
+#    -P,--password   Password used for remote notifications.
+#    -w,--wait       Wait until the notification has been dismissed.
+#    --url           Notification click will result in the URL being opened
+#
+#Display a notification using the title given on the command-line and the
+#message given in the standard input.
+#
+#Priority can be one of the following named keys: Very Low, Moderate, Normal,
+#High, Emergency. It can also be an int between -2 and 2.
+#
+#To be compatible with gNotify the following switch is accepted:
+#    -t,--title      Does nothing. Any text following will be treated as the
+#                    title because that's the default argument behaviour
+
