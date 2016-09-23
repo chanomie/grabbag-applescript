@@ -24,14 +24,16 @@ function offlineMessages() {
   var messagesApp = Application('Messages'),
       i;
 	  
-	  
+
+  messagesApp.quit();
+  /*  
   for (i = 0; i < messagesApp.services.length; i++) {
-    // messagesApp.services[i].name() === "ChaosServer" && 
-    if(messagesApp.services[i].status() !== "offline") {
+    if(messagesApp.services[i].name() !== "SMS" && messagesApp.services[i].status() !== "offline") {
   	  // console.log(messagesApp.services[i].name() + " - " + messagesApp.services[i].status());
 	  messagesApp.services[i].logOut();
 	}
-  }	  
+  }
+  */  
 }
 
 /**
