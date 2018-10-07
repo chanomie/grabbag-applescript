@@ -1,87 +1,80 @@
 #!/bin/bash
 
-APPLICATION='prowlnotify'
-while getopts "hsvwt:i:I:a:p:H:P:n:N:m:" opt; do
-  case $opt in
-    h)
-      echo "help"
-      ;;
-    v)
-      echo "prowlnotify 1.0"
-      echo "Copyright (c) Chaos Corporation, 2015"
-      ;;
-    s)
-      echo "Prowl notify doesn't understand -s (sticky)" >&2
-      ;;
-    w)
-      echo "Prowl notify doesn't understand -w (wait)" >&2
-      ;;
-    i)
-      echo "Prowl notify doesn't understand -i (icon)" >&2
-      ;;
-    I)
-      echo "Prowl notify doesn't understand -I (iconpath)" >&2
-      ;;
-    a)
-      echo "Prowl notify doesn't understand -a (appIcon)" >&2
-      ;;
-    H)
-      echo "Prowl notify doesn't understand -H (host)" >&2
-      ;;
-    t)
-      TITLE=${OPTARG}
-      ;;
-    p)
-      PRIORITY=${OPTARG}
-      ;;
-    P)
-      PASSWORD=${OPTARG}
-      ;;
-    n)
-      APPLICATION=${OPTARG}
-      ;;
-    N)
-      EVENT=${OPTARG}
-      ;;
-    m)
-      MESSAGE=${OPTARG}
-      ;;
-  esac
+usage="Usage: $(basename $0) [-h]
+    -h - help
+    -a - [256] application name
+    -e - [1024] event name
+    -d - [10000] description of the event
+    -u - [512] url of application
+Post to prowl
+"
+
+KEY_FILE="${HOME}/.prowlnotify/.prowlapikey"
+
+if [ ! -e ${KEY_FILE} ]; then
+  echo "Prowl API Key needs to be present in file [${KEY_FILE}]"
+  exit 1
+fi
+
+apikey=$(cat ~/.prowlnotify/.prowlapikey | head -1)
+application_name=
+event_name=
+description=
+url=
+while [ $# -gt 0 ]; do
+    case "$1" in
+        -h|-\?)
+            echo "$usage"
+            exit 0
+        ;;
+        -a)
+        	application_name="$2"
+        	shift
+        ;;
+        -e)
+        	event_name="$2"
+        	shift
+        ;;
+        -d)
+        	description="$2"
+        	shift
+        ;;
+        -u)
+        	url="$2"
+        	shift
+        ;;
+        -*)
+             echo "Error: unexpected option: $1" 1>&2
+             exit 1
+        ;;
+        *)
+            break
+        ;;
+    esac
+    shift
 done
 
+if [ -z "${application_name:-}" ]; then
+  echo "Application name should be set with the -a parameter."
+  echo ""
+  echo "$usage"
+  exit 1
+fi
+if [ -z "${event_name:-}" ]; then
+  echo "Event name should be set with the -e parameter."
+  echo ""
+  echo "$usage"
+  exit 1
+fi
+if [ -z "${description:-}" ]; then
+  echo "Description should be set with the -d parameter."
+  echo ""
+  echo "$usage"
+  exit 1
+fi
 
-# Usage: growlnotify [-hsvw] [-i ext] [-I filepath] [--image filepath]
-#                   [-a appname] [-p priority] [-H host] [-P password]
-#                   [-n name] [-N notename] [-m message] [-t] [--url url]
-#                   [title]
-#Options:
-#    -h,--help       Display this help
-#    -v,--version    Display version number
-#    -n,--name       Set the name of the application that sends the notification
-#                    [Default: growlnotify]
-#    -N --noteName   Set the note name of the notification that GrowlNotify sends    
-#    -s,--sticky     Make the notification sticky
-#    -a,--appIcon    Specify an application name to take the icon from
-#    -i,--icon       Specify a file type or extension to look up for the
-#                    notification icon
-#    -I,--iconpath   Specify a file whose icon will be the notification icon
-#       --image      Specify an image file to be used for the notification icon
-#    -m,--message    Sets the message to be used instead of using stdin
-#                    Passing - as the argument means read from stdin
-#    -p,--priority   Specify an int or named key (default is 0)
-#    -d,--identifier Specify a notification identifier (used for coalescing)
-#    -H,--host       Specify a hostname or IP address to which to send a remote notification.
-#    -P,--password   Password used for remote notifications.
-#    -w,--wait       Wait until the notification has been dismissed.
-#    --url           Notification click will result in the URL being opened
-#
-#Display a notification using the title given on the command-line and the
-#message given in the standard input.
-#
-#Priority can be one of the following named keys: Very Low, Moderate, Normal,
-#High, Emergency. It can also be an int between -2 and 2.
-#
-#To be compatible with gNotify the following switch is accepted:
-#    -t,--title      Does nothing. Any text following will be treated as the
-#                    title because that's the default argument behaviour
-
+if [ -z "${url:-}" ]; then
+  curl -d "apikey=${apikey}" -d "application=${application_name}" -d "event=${event_name}" -d "description=${description}" -X POST "https://api.prowlapp.com/publicapi/add"
+else
+  curl -d "apikey=${apikey}" -d "application=${application_name}" -d "event=${event_name}" -u "url=${url}" -d "description=${description}" -X POST "https://api.prowlapp.com/publicapi/add"
+fi
