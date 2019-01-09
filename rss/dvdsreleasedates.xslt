@@ -3,13 +3,13 @@
 <xsl:stylesheet xmlns:xsl="http://www.w3.org/1999/XSL/Transform" xmlns:xhtml="http://www.w3.org/1999/xhtml"
       version="1.0" >
 
+  <xsl:strip-space elements="xhtml:title" />
   <xsl:variable name="siteurl" select="'https://www.dvdsreleasedates.com'" />
   <xsl:template match="xhtml:html">
     <rss version="2.0">
       <channel>
-        <title>
-          <xsl:value-of select="xhtml:head/xhtml:title"/>
-        </title>
+        <xsl:variable name="title" select="normalize-space(xhtml:head/xhtml:title)"/>
+        <title><xsl:value-of select="translate($title, ' ', '')"/></title>
         <link><xsl:value-of select="$siteurl"/></link>
         <description>
           <xsl:value-of select="xhtml:head/xhtml:meta[@name='description']/@content"/>            
