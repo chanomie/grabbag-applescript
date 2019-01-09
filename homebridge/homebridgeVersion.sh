@@ -42,7 +42,7 @@ vercomp () {
 
 OLD_IFS=${IFS}
 IFS=$'\n'
-for longPackageName in `npm -g list --depth=0 | grep "──" | grep "homebridge"`; do
+for longPackageName in `npm -g list --depth=0 | grep "+" | grep "homebridge"`; do
   packageNameVersion=$(echo ${longPackageName} | cut -c 5-)
   installedPackageName=$(echo ${packageNameVersion} | cut -d"@" -f1)
   installedPackageVersion=$(echo ${packageNameVersion} | cut -d"@" -f2)
@@ -55,8 +55,8 @@ for longPackageName in `npm -g list --depth=0 | grep "──" | grep "homebridge
   vercomp ${installedPackageVersion} ${currentPackageVersion}
     case $? in
         0) echo "Same Version - ${versionMessage}";;
-        1) echo "Newer Verion - ${versionMessage}";;
-        2) echo "Installed version is newer?  That's wierd - ${versionMessage}";;
+        2) echo "Newer Verion - ${versionMessage}";;
+        1) echo "Installed version is newer?  That's wierd - ${versionMessage}";;
     esac
 
   
