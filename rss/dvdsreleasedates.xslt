@@ -4,13 +4,16 @@
       version="1.0" >
 
   <xsl:strip-space elements="xhtml:title" />
+  <xsl:strip-space elements="xhtml:xhtml:td" />
   <xsl:variable name="siteurl" select="'https://www.dvdsreleasedates.com'" />
+  <xsl:variable name="feedurl" select="'https://home.chaosserver.net/dvdsreleasedates/dvdsreleasedates.rss'" />
   <xsl:template match="xhtml:html">
-    <rss version="2.0">
+    <rss version="2.0" xmlns:atom="http://www.w3.org/2005/Atom">
       <channel>
         <xsl:variable name="title" select="normalize-space(xhtml:head/xhtml:title)"/>
-        <title><xsl:value-of select="translate($title, ' ', '')"/></title>
+        <title><xsl:value-of select="$title"/></title>
         <link><xsl:value-of select="$siteurl"/></link>
+        <atom:link href='https://home.chaosserver.net/dvdsreleasedates/dvdsreleasedates.rss' rel="self" type="application/rss+xml" />
         <description>
           <xsl:value-of select="xhtml:head/xhtml:meta[@name='description']/@content"/>            
         </description>
@@ -20,11 +23,8 @@
           <xsl:variable name="distance" select=".//xhtml:div[@class='distance']/text()" />
           <xsl:if test="contains($distance, 'this week')">
             <item>
-              <title>
-                <xsl:for-each select="xhtml:tr[1]/xhtml:td/text()">
-                  <xsl:value-of select='.' />
-                </xsl:for-each>
-              </title>
+              <title><xsl:for-each select="xhtml:tr[1]/xhtml:td/text()"><xsl:value-of select="normalize-space(translate(., '&#xA;', ''))" /></xsl:for-each></title>
+              <guid>https://home.chaosserver.net/dvdsreleasedates/<xsl:for-each select="xhtml:tr[1]/xhtml:td/text()"><xsl:value-of select="translate(translate(., '&#xA;', ''), ' ', '')" /></xsl:for-each></guid>
               <link><xsl:value-of select="$siteurl"/></link>
               <description>
                 <xsl:for-each select="xhtml:tr/xhtml:td/xhtml:a">
