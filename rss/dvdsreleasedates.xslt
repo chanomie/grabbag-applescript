@@ -30,7 +30,7 @@
                 <xsl:for-each select="xhtml:tr/xhtml:td/xhtml:a">
                   <xsl:if test="text() != ''">
                     <xsl:text>&lt;p&gt;</xsl:text>
-                    <xsl:value-of select='text()' />
+                    <xsl:value-of select="normalize-space(translate(text(), '&#xA;', ''))" />
                     <xsl:text>&lt;/p&gt;</xsl:text>
                   </xsl:if>
                 </xsl:for-each>
