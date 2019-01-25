@@ -27,6 +27,9 @@
               <guid>https://home.chaosserver.net/dvdsreleasedates/<xsl:for-each select="xhtml:tr[1]/xhtml:td/text()"><xsl:value-of select="translate(translate(., '&#xA;', ''), ' ', '')" /></xsl:for-each></guid>
               <link><xsl:value-of select="$siteurl"/></link>
               <description>
+                <xsl:text>&lt;h1&gt;</xsl:text>
+                <xsl:for-each select="xhtml:tr[1]/xhtml:td/text()"><xsl:value-of select="normalize-space(translate(., '&#xA;', ''))" /></xsl:for-each>
+                <xsl:text>&lt;/h1&gt;</xsl:text>
                 <!-- xhtml:html//xhtml/table[@class='fieldtable-inner'] -->
                 <xsl:for-each select="xhtml:tr/xhtml:td[@class='dvdcell']">
                   <xsl:text>&lt;p&gt;</xsl:text>
