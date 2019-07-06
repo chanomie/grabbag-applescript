@@ -42,7 +42,7 @@ vercomp () {
 
 OLD_IFS=${IFS}
 IFS=$'\n'
-for longPackageName in `npm -g list --depth=0 | grep "+" | grep "homebridge"`; do
+for longPackageName in `npm -g list --depth=0 | grep "homebridge"`; do
   packageNameVersion=$(echo ${longPackageName} | cut -c 5-)
   installedPackageName=$(echo ${packageNameVersion} | cut -d"@" -f1)
   installedPackageVersion=$(echo ${packageNameVersion} | cut -d"@" -f2)
