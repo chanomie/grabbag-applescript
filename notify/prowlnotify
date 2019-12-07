@@ -74,7 +74,7 @@ if [ -z "${description:-}" ]; then
 fi
 
 if [ -z "${url:-}" ]; then
-  curl -d "apikey=${apikey}" -d "application=${application_name}" -d "event=${event_name}" -d "description=${description}" -X POST "https://api.prowlapp.com/publicapi/add"
+  curl -s -d "apikey=${apikey}" -d "application=${application_name}" -d "event=${event_name}" -d "description=${description}" -X POST "https://api.prowlapp.com/publicapi/add"
 else
-  curl -d "apikey=${apikey}" -d "application=${application_name}" -d "event=${event_name}" -u "url=${url}" -d "description=${description}" -X POST "https://api.prowlapp.com/publicapi/add"
+  curl -s -d "apikey=${apikey}" -d "application=${application_name}" -d "event=${event_name}" -u "url=${url}" -d "description=${description}" -X POST "https://api.prowlapp.com/publicapi/add"
 fi
