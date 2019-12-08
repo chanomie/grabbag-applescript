@@ -3,6 +3,62 @@ MOUNT_POINT="/Volumes/DRIVE"
 SITE="https://www.example.com"
 today=$(date +"%Y-%m-%d")
 
+usage="Usage: $(basename $0) [-h][-m MOUNT_POINT][-s siteurl]
+    -h - help
+    -m - MOUNT_POINT such as /Volumes/Drobo
+    -s - site url e.g. https://www.example.com
+
+e.g.
+    $(basename $0) -d refer.client.com
+"
+
+while [ $# -gt 0 ]; do
+    case "$1" in
+        -h|-\?)
+            echo "$usage"
+            exit 0
+        ;;
+        -m)
+            if [ -z "${2:-}" ]; then
+                echo "Error: option $1 expects a parameter" 1>&2
+                exit 1
+            fi
+            MOUNT_POINT="$2"
+            shift
+        ;;
+        -s)
+            if [ -z "${2:-}" ]; then
+                echo "Error: option $1 expects a parameter" 1>&2
+                exit 1
+            fi
+            SITE="$2"
+            shift
+        ;;
+        -*)
+             echo "Error: unexpected option: $1" 1>&2
+             exit 1
+        ;;
+        *)
+            break
+        ;;
+    esac
+    shift
+done
+
+if [ -z "${MOUNT_POINT:-}" ]; then
+  echo "Mount Point should be set with -m"
+  echo ""
+  echo "$usage"
+  exit 1
+fi
+if [ -z "${SITE:-}" ]; then
+  echo "Sitepoint should be set with -s"
+  echo ""
+  echo "$usage"
+  exit 1
+fi
+
+
 read -d '' RSS_START << EOF
 <rss version="2.0" xmlns:atom="http://www.w3.org/2005/Atom">
   <channel>
